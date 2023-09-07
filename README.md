@@ -6,8 +6,7 @@
 
 ## GitHub Pages
 All `GitHub Pages` websites are managed on GitHub infrastructure. GitHub uses `Jekyll` to tranform your content into static websites and blogs. Each time we change files in GitHub it initiates a GitHub Action that rebuilds and publishes the site with Jekyll.  
-- GitHub Pages is powered by: [Jekyll](https://jekyllrb.com/).
-- Publised teacher website: [nighthawkcoders.github.io/teacher](https://nighthawkcoders.github.io/teacher/)
+- Publised teacher website: [tanayp327.github.io/PatelPurohitPair](https://tanayp327.github.io/PatelPurohitPair/)
 
 ## Preparing a Preview Site 
 In all development, it is recommended to test your code before deployment.  The GitHub Pages development process is optimized by testing your development on your local machine, prior to files on GitHub
