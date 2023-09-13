@@ -166,7 +166,7 @@ Our project aimed to utilize NBA player data from an appropriate API, process an
 - Prepare a presentation highlighting our experimentation, errors, and lessons learned.
 - Practice the presentation, emphasizing the complexity of ranking NBA players.
 
-*Day 8: Final Presentation and Submission*
+*Day 8: Final Presentation*
 - Present the project to the class, discussing our attempts to rank players based on user input and the challenges encountered.
 - Encourage class discussion on the subjectivity of ranking criteria in the context of NBA players.
 - Submit the project presentation, documentation, and code, along with our insights into the complexities of ranking.
@@ -176,20 +176,4 @@ Our project aimed to utilize NBA player data from an appropriate API, process an
 - Emphasize the importance of adapting project goals and expectations in response to challenges.
 - Encourage discussions on the subjective nature of ranking, promoting critical thinking and debate within the class.
 
-**Feedback from Yuri:**
-
-- **Exploratory Approach:** I appreciate your project's willingness to explore a challenging and open-ended task like ranking NBA players. It's clear that you took on a complex problem and didn't shy away from the difficulties it presented.
-
-- **Adaptation to Challenges:** It's great that you acknowledged the hurdles you faced in defining ranking criteria for NBA players. Many projects can encounter roadblocks, and your adaptability in the face of these challenges is commendable.
-
-- **Critical Thinking:** I enjoyed the part of your presentation where you encouraged class discussion on the subjectivity of ranking criteria. It's essential to promote critical thinking and debate in class projects, and you did a good job in that regard.
-
-**Feedback from Shreyas:**
-
-- **Project Clarity:** While it's clear that you faced several difficulties related to ranking NBA players, there were moments in your presentation where the project's objectives became a bit unclear. Providing a concise summary of your overall goals at the beginning of the presentation might help.
-
-- **Documentation:** Your documentation was comprehensive in detailing the project's journey. However, consider adding a section that specifically outlines the technical challenges you encountered and how you attempted to overcome them.
-
-- **Next Steps:** It would be interesting to hear about your thoughts on potential next steps. Even though you faced challenges, discussing how you might approach a similar project in the future or what you learned from this experience could provide valuable insights.
-
-Overall, your project's willingness to tackle a complex problem and your adaptability in the face of challenges were strong points. Clarifying project goals, focusing on technical challenges, and discussing future directions could further enhance your presentation.
+- **Peer Feedback:** Yuri and Shreyas told us to make the table more interactive and organized by adding ways to sort the table. We told them about our difficulties with reorganizing the table with the user input, and they suggested this other idea.
