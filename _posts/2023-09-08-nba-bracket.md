@@ -2,8 +2,8 @@
 toc: true
 comments: false
 layout: post
-title: NBA Ranking
-description: Rank some randomly generated NBA players
+title: NBA Movie Bracket
+description: The basic layout of how our project will be
 type: tangibles
 courses: { csa: {week: 3} }
 permalink: /nba-bracket
@@ -11,7 +11,14 @@ permalink: /nba-bracket
 
 <html>
 <head>
-    <title>Random NBA Players</title>
+    <style>
+        th.sorted-asc::after {
+            content: " ▲";
+        }
+        th.sorted-desc::after {
+            content: " ▼";
+        }
+    </style>
 </head>
 <body>
     <h1>Random NBA Players</h1>
@@ -19,11 +26,11 @@ permalink: /nba-bracket
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Position</th>
-                <th>Team</th>
+                <th onclick="sortTable(0)">ID</th>
+                <th onclick="sortTable(1)">First Name</th>
+                <th onclick="sortTable(2)">Last Name</th>
+                <th onclick="sortTable(3)">Position</th>
+                <th onclick="sortTable(4)">Team</th>
             </tr>
         </thead>
         <tbody id="playerTableBody">
@@ -35,70 +42,19 @@ permalink: /nba-bracket
         <input type="text" id="textBox" name="textBox">
         <button type="submit">Submit</button>
     </form>
-    <div id="rankedPlayers">
-        <h2>Ranked Players</h2>
-        <ul id="rankedList"></ul>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Position</th>
-                <th>Team</th>
-            </tr>
-        </thead>
-        <tbody id="rankedPlayersTableBody">
-            <!-- Ranked players will be added here -->
-        </tbody>
-    </table>
     <script>
-        // Global array to store player rankings
-        const playerRankings = [];
-        
-        // Global array to store player data
-        let playerDataArray = [];
-
+        let playerData = []; // Store player data globally for sorting
         function handleFormSubmit() {
             const form = document.getElementById('myForm');
+            const submittedTextSpan = document.getElementById('submittedText');
             form.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent the form from submitting and refreshing the page
                 const textBoxValue = document.getElementById('textBox').value;
-                // Assuming textBoxValue contains the player's name or ID
-                playerRankings.push(textBoxValue); // Store the ranking in the array
-                rearrangeTable(); // Rearrange the table based on rankings
+                submittedTextSpan.textContent = textBoxValue;
             });
         }
-
-        function rearrangeTable() {
-            // Sort the playerDataArray based on the order of rankings entered by the user
-            playerDataArray.sort((a, b) => {
-                const aIndex = playerRankings.indexOf(a.full_name);
-                const bIndex = playerRankings.indexOf(b.full_name);
-                return aIndex - bIndex;
-            });
-
-            // Update the rankedPlayersTableBody with the sorted data
-            const rankedPlayersTableBody = document.getElementById('rankedPlayersTableBody');
-            rankedPlayersTableBody.innerHTML = '';
-
-            for (const player of playerDataArray) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${player.id}</td>
-                    <td>${player.first_name}</td>
-                    <td>${player.last_name}</td>
-                    <td>${player.position}</td>
-                    <td>${player.team.full_name}</td>
-                `;
-                rankedPlayersTableBody.appendChild(row);
-            }
-        }
-
-        // Call the function to set up the form handling and initialize the ranked players list and table
+        // Call the function to set up the form handling
         handleFormSubmit();
-
         async function fetchRandomPlayers() {
             const url = 'https://free-nba.p.rapidapi.com/players?page=0&per_page=100'; // Increase per_page for more choices
             const options = {
@@ -111,15 +67,13 @@ permalink: /nba-bracket
             try {
                 const response = await fetch(url, options);
                 const data = await response.json();
-                return data.data; // Extract the player data from the response
+                playerData = data.data; // Store player data globally
             } catch (error) {
                 console.error(error);
             }
         }
-
         async function displayRandomPlayers() {
-            const playerData = await fetchRandomPlayers();
-            playerDataArray = playerData; // Store the player data for later use
+            await fetchRandomPlayers();
             if (playerData) {
                 const playerTableBody = document.getElementById('playerTableBody');
                 playerTableBody.innerHTML = ''; // Clear previous rows
@@ -139,14 +93,35 @@ permalink: /nba-bracket
                 }
             }
         }
+        function sortTable(columnIndex) {
+            const table = document.querySelector('table');
+            const rows = Array.from(table.getElementsByTagName('tr'));
+            const isAscending = table.rows[0].cells[columnIndex].classList.contains('sorted-asc');
+            // Remove sorting classes from all columns
+            table.querySelectorAll('th').forEach(th => {
+                th.classList.remove('sorted-asc', 'sorted-desc');
+            });
+            // Sort the rows based on the selected column
+            rows.sort((a, b) => {
+                const cellA = a.cells[columnIndex].textContent.trim();
+                const cellB = b.cells[columnIndex].textContent.trim();
+                return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+            });
+            // Add sorting class to the clicked column
+            table.rows[0].cells[columnIndex].classList.add(isAscending ? 'sorted-desc' : 'sorted-asc');
+            // Rebuild the table with sorted rows
+            for (let i = 0; i < rows.length; i++) {
+                table.tBodies[0].appendChild(rows[i]);
+            }
+        }
     </script>
 </body>
 </html>
 
-**Project Title:** NBA Player Ranking 
+**Project Title:** NBA Player Ranking Experiment
 
 **Project Description:**
-Our project involves utilizing movie-related data through an appropriate API, processing and integrating this data, and creating a unique visualization or application for our class.
+Our project aimed to utilize NBA player data from an appropriate API, process and integrate this data, and attempt to create a unique visualization or application for our class to rank players based on user input. However, we encountered numerous open-ended challenges in the process.
 
 **Project Goals:**
 1. To use NBA player data from an API.
@@ -164,37 +139,57 @@ Our project involves utilizing movie-related data through an appropriate API, pr
 **Project Timeline:**
 
 *Day 1: Project Initiation and Planning*
-- Define project objectives and goals.
-- Select an appropriate movie-related API.
-- Develop a project plan, including a timeline.
-- Create a project presentation outline.
+- Define project objectives and goals, including the intention to rank players based on user input.
+- Select an appropriate NBA player data API.
+- Develop a project plan, including a timeline, with an emphasis on experimental aspects.
+- Create a project presentation outline highlighting our intent to rank players.
 
 *Day 2-3: Data Retrieval and Processing*
-- Access the chosen API and set up authentication (if required).
-- Retrieve movie-related data, including but not limited to titles, ratings, genres, and release dates.
-- Resolve any API fetching issues and adapt the project scope if necessary.
-- Develop data processing scripts to clean and format the data for visualization.
+- Access the chosen NBA player data API and set up authentication (if required).
+- Retrieve NBA player-related data, including but not limited to player names, statistics, and team affiliations.
+- Encounter challenges in fetching and processing data due to its complexity and variability.
+- Realize the open-ended nature of the ranking criteria and explore various approaches.
 
-*Day 4-5: Visualization Development*
-- Choose a visualization or application concept (e.g., interactive movie ratings chart, recommendation system, or movie trivia game).
-- Begin developing the chosen concept using appropriate technologies (e.g., JavaScript, Python, HTML/CSS).
-- Test and refine the visualization/application for accuracy and functionality.
+*Day 4-5: Ranking Experimentation*
+- Choose a ranking concept (e.g., best players based on performance metrics, strongest players by physical attributes).
+- Begin developing the ranking experiment using JavaScript, HTML, and CSS.
+- Face difficulties in defining a universal ranking criterion, as "best" or "strongest" could have multiple interpretations.
+- Experiment with user input and diverse ranking criteria, leading to open-ended errors.
 
-*Day 6: Agile Methodology and Iterative Programming*
-- Implement agile methodology to manage the project efficiently.
-- Conduct a sprint meeting to review progress and address any issues.
-- Make iterative improvements based on feedback received during the sprint review.
+*Day 6: Agile Methodology and Adaptation*
+- Implement agile methodology to address ongoing challenges and uncertainties.
+- Conduct a sprint meeting to discuss our struggles and potential directions.
+- Acknowledge that the open-ended nature of player ranking may not yield a single, definitive result.
 
 *Day 7: Documentation and Presentation*
-- Create detailed documentation explaining the project's architecture, code, and data sources.
-- Prepare a visually appealing presentation summarizing the project's journey, challenges, and outcomes.
-- Practice the presentation and address any gaps or areas for improvement.
+- Create comprehensive documentation explaining the challenges faced in the project, especially related to ranking criteria.
+- Prepare a presentation highlighting our experimentation, errors, and lessons learned.
+- Practice the presentation, emphasizing the complexity of ranking NBA players.
 
 *Day 8: Final Presentation and Submission*
-- Present the project to the class, highlighting key aspects, challenges, and lessons learned.
-- Address any questions or feedback from the class.
-- Submit the project presentation, documentation, and code.
+- Present the project to the class, discussing our attempts to rank players based on user input and the challenges encountered.
+- Encourage class discussion on the subjectivity of ranking criteria in the context of NBA players.
+- Submit the project presentation, documentation, and code, along with our insights into the complexities of ranking.
 
 **Lessons Learned:**
-- Maintain open and regular communication between pair about project progress.
-- Plan for hiccups and be prepared to have to change initial plans to successfully complete project.
+- Acknowledge the complexity of open-ended tasks, especially when defining subjective criteria like "best" or "strongest."
+- Emphasize the importance of adapting project goals and expectations in response to challenges.
+- Encourage discussions on the subjective nature of ranking, promoting critical thinking and debate within the class.
+
+**Feedback from Yuri:**
+
+- **Exploratory Approach:** I appreciate your project's willingness to explore a challenging and open-ended task like ranking NBA players. It's clear that you took on a complex problem and didn't shy away from the difficulties it presented.
+
+- **Adaptation to Challenges:** It's great that you acknowledged the hurdles you faced in defining ranking criteria for NBA players. Many projects can encounter roadblocks, and your adaptability in the face of these challenges is commendable.
+
+- **Critical Thinking:** I enjoyed the part of your presentation where you encouraged class discussion on the subjectivity of ranking criteria. It's essential to promote critical thinking and debate in class projects, and you did a good job in that regard.
+
+**Feedback from Shreyas:**
+
+- **Project Clarity:** While it's clear that you faced several difficulties related to ranking NBA players, there were moments in your presentation where the project's objectives became a bit unclear. Providing a concise summary of your overall goals at the beginning of the presentation might help.
+
+- **Documentation:** Your documentation was comprehensive in detailing the project's journey. However, consider adding a section that specifically outlines the technical challenges you encountered and how you attempted to overcome them.
+
+- **Next Steps:** It would be interesting to hear about your thoughts on potential next steps. Even though you faced challenges, discussing how you might approach a similar project in the future or what you learned from this experience could provide valuable insights.
+
+Overall, your project's willingness to tackle a complex problem and your adaptability in the face of challenges were strong points. Clarifying project goals, focusing on technical challenges, and discussing future directions could further enhance your presentation.
