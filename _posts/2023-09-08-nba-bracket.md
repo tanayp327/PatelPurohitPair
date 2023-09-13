@@ -39,9 +39,26 @@ permalink: /nba-bracket
         <h2>Ranked Players</h2>
         <ul id="rankedList"></ul>
     </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Position</th>
+                <th>Team</th>
+            </tr>
+        </thead>
+        <tbody id="rankedPlayersTableBody">
+            <!-- Ranked players will be added here -->
+        </tbody>
+    </table>
     <script>
         // Global array to store player rankings
         const playerRankings = [];
+        
+        // Global array to store player data
+        let playerDataArray = [];
 
         function handleFormSubmit() {
             const form = document.getElementById('myForm');
@@ -50,23 +67,36 @@ permalink: /nba-bracket
                 const textBoxValue = document.getElementById('textBox').value;
                 // Assuming textBoxValue contains the player's name or ID
                 playerRankings.push(textBoxValue); // Store the ranking in the array
-                displayRankedPlayers(); // Update the ranked players list
+                rearrangeTable(); // Rearrange the table based on rankings
             });
         }
 
-        function displayRankedPlayers() {
-            const rankedList = document.getElementById('rankedList');
-            rankedList.innerHTML = ''; // Clear previous rankings
+        function rearrangeTable() {
+            // Sort the playerDataArray based on the order of rankings entered by the user
+            playerDataArray.sort((a, b) => {
+                const aIndex = playerRankings.indexOf(a.full_name);
+                const bIndex = playerRankings.indexOf(b.full_name);
+                return aIndex - bIndex;
+            });
 
-            // Iterate through the playerRankings array and add each ranked player to the list
-            for (let i = 0; i < playerRankings.length; i++) {
-                const listItem = document.createElement('li');
-                listItem.textContent = playerRankings[i];
-                rankedList.appendChild(listItem);
+            // Update the rankedPlayersTableBody with the sorted data
+            const rankedPlayersTableBody = document.getElementById('rankedPlayersTableBody');
+            rankedPlayersTableBody.innerHTML = '';
+
+            for (const player of playerDataArray) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${player.id}</td>
+                    <td>${player.first_name}</td>
+                    <td>${player.last_name}</td>
+                    <td>${player.position}</td>
+                    <td>${player.team.full_name}</td>
+                `;
+                rankedPlayersTableBody.appendChild(row);
             }
         }
 
-        // Call the function to set up the form handling and initialize the ranked players list
+        // Call the function to set up the form handling and initialize the ranked players list and table
         handleFormSubmit();
 
         async function fetchRandomPlayers() {
@@ -89,6 +119,7 @@ permalink: /nba-bracket
 
         async function displayRandomPlayers() {
             const playerData = await fetchRandomPlayers();
+            playerDataArray = playerData; // Store the player data for later use
             if (playerData) {
                 const playerTableBody = document.getElementById('playerTableBody');
                 playerTableBody.innerHTML = ''; // Clear previous rows
